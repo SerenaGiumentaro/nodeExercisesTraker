@@ -25,24 +25,20 @@ const createLogObj = (user, exercises, from, to, limit) => {
   if (from && to) {
     const fromDate = new Date(from);
     const toDate = new Date(to);
-    filteredExercises = exercises.filter((item) => {
-      // const itemDate = new Date(item.date);
+    filteredExercises = filteredExercises.filter((item) => {
       return item.date >= fromDate && item.date <= toDate;
     });
   } else if (from) {
     const fromDate = new Date(from);
-    filteredExercises = exercises.filter(
-      (item) => new Date(item.date) >= fromDate
+    filteredExercises = filteredExercises.filter(
+      (item) => item.date >= fromDate
     );
   } else if (to) {
     const toDate = new Date(to);
-    filteredExercises = exercises.filter(
-      (item) => new Date(item.date) <= toDate
-    );
+    filteredExercises = filteredExercises.filter((item) => item.date <= toDate);
   }
   if (limit) {
-    console.log(limit)
-    filteredExercises.slice(0, +limit);
+    filteredExercises = filteredExercises.slice(0, +limit);
   }
 
   const logObj = {
@@ -81,17 +77,15 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     _id: id,
     username: user.username,
     description: req.body.description,
-    date: req.body.date
-      ? new Date(req.body.date)
-      : new Date(),
+    date: req.body.date ? new Date(req.body.date) : new Date(),
     duration: +req.body.duration,
   };
   exercises.push(exercise);
-  res.json({...exercise, date: exercise.date.toDateString()});
+  res.json({ ...exercise, date: exercise.date.toDateString() });
 });
 
 app.get("/api/users/:_id/exercises", (req, res) => {
-  res.json({...exercises,date: exercises.date.toDateString()});
+  res.json({ ...exercises, date: exercises.date.toDateString() });
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
@@ -102,12 +96,10 @@ app.get("/api/users/:_id/logs", (req, res) => {
     req.query.from,
     req.query.to,
     req.query.limit
-    );
-    console.log("query",req.query, "exercises" ,exercises, "logs", logs)
+  );
   res.json(logs);
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
-
